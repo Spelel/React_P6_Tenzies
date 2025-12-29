@@ -2,6 +2,9 @@ import Die from './Die.jsx'
 import React from 'react'
 import NewNumberButton from './NewSetButton.jsx'
 import { nanoid } from 'nanoid'
+
+
+
 export default function Main() {
 
 //    function generateAllNewDice() {
@@ -16,27 +19,48 @@ export default function Main() {
 
 //------------------------------------------------------------------------------------------------
 
+
+    function hold(id) {
+        console.log(id)
+        setDice(prevDice => prevDice.map(item => {
+            return item.id === id ? {...item, isHeld: !item.isHeld} :item
+        }))
+    }
+
     function generateAllNewDice() {
         return new Array(10)
             .fill(0)
-            .map(() => {
-                return {
+            .map(() => ({
+                
                     value: Math.ceil(Math.random()*6),
-                    isHeld: true,
+                    isHeld: false,
                     id: nanoid()
-                }
-            })
+                
+            }))
     }
 
     let [dice, setDice] = React.useState(generateAllNewDice())
 
-    const diceElements = dice.map(num => <Die key={num.id} value={num.value} state={num.isHeld} />)
+    const diceElements = dice.map(num => <Die 
+                                            key={num.id} 
+                                            value={num.value} 
+                                            state={num.isHeld} 
+                                            //------other hold
+                                            // hold={hold}
+                                            // id={num.isHeld}
+                                            //------
+                                            hold={()=>(hold(num.id))}
+    />)
 
     function newDie() {
-        setDice(generateAllNewDice)
+        setDice(prevDice => prevDice.map(die => {
+            return die.isHeld === true ? die : {...die, value: Math.ceil(Math.random()*6)}
+        }))
     }
 
-    diceElements.map(n => console.log(n.props.state))
+    
+
+
     return <>
     <section className="flex justify-center items-center h-screen bg-[#0B2434]">
         <main className="flex flex-col justify-center items-center h-7/10 w-7/10 bg-[#F5F5F5] rounded-xl">
