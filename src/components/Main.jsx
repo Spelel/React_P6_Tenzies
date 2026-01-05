@@ -62,9 +62,13 @@ export default function Main() {
     />)
 
     function newDie() {
-        setDice(prevDice => prevDice.map(die => {
-            return die.isHeld === true ? die : {...die, value: Math.ceil(Math.random()*6)}
-        }))
+        if (!gameWon) {
+            setDice(prevDice => prevDice.map(die => {
+                return die.isHeld === true ? die : {...die, value: Math.ceil(Math.random()*6)}
+            }))
+        } else {
+            setDice(generateAllNewDice())
+        }
     }
 
     
